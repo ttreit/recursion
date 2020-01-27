@@ -3,23 +3,41 @@ var stringifyJSON = function(obj) {
   let rightside = '}';
   let middle = '';
 
-  //functions for parsing
-  function stringArray() {
+  //sorting types to be turned to strings
+
+  function sortTypes() {
 
   }
 
+  //functions for parsing
+  function stringArray() {
+      let arrayResult;
+        //test
+        arrayResult = 'array';
+      return middle = middle + arrayResult;
+  }
+
   function stringObject() {
+      let objectResult;
+       //test
+       objectResult = 'object';
+      return middle = middle + objectResult;
 
   }
 
   function stringOther() {
+      let otherResult;
+      //test
+      otherResult = 'other';
+      return middle = middle + otherResult;
 
   }
 
 
 
-
-
+  stringArray();
+  stringObject();
+  stringOther();
   return `${leftside}${middle}${rightside}`;
 };
 
@@ -34,7 +52,7 @@ let simpleTestData = {
   'd' : {'z' : 123, 'y': 'abc'}
 };
 
-{"a":123,"b":"Tammy","c":[1,2,3],"d":{"z":123,"y":"abc"}}
+//{"a":123,"b":"Tammy","c":[1,2,3],"d":{"z":123,"y":"abc"}}
 
 //three main things to solve:
 // 1. arrays
@@ -44,10 +62,10 @@ let simpleTestData = {
 
 // Simple Test
 let theirs = JSON.stringify(simpleTestData);
-console.log(theirs);
+console.log('theirs:', theirs);
 console.log ('-----------------------')
 let mine = stringifyJSON(simpleTestData);
-console.log (mine);
+console.log ('mine: ', mine);
 
 if (theirs === mine) {
   console.log('PASSED!');
