@@ -1,103 +1,69 @@
-var stringifyJSON = function(obj) {
-  let leftside = '{';
-  let rightside = '}';
-  let middle = '';
 
-
-
-  //Is Dictionary function
-  //From StackOverflow
-  //https://stackoverflow.com/questions/38304401/javascript-check-if-dictionary
-  function isDict(v) {
-      return typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
+function stringifyJSON(val) {
+  if (val === undefined || typeof val ==="function") {
+    return undefined;
   }
 
-  //sorting types to be turned to strings
-
-  function iterateObject() {     //TODO rename function
-      // iterate over object
-      //get k/v pair
-      //key is already a string
-      //append key to 'middle'
-        //key should be in quotes
-      //append :
-      //append value as string
-        //send to be sorted
-        //receive text string from sortValueTypes
+  if (Array.isArray(val)) {
+    return arrayToString(val);
+  } else {
+    if (val === null) {
+      return simpleValueToString(val);
+    } else if (typeof val === 'object') {
+      return objToString(val);
+    } else {
+      return simpleValueToString(val);
+    }
   }
-
-
-  function sortValueTypes() {
-      //test value for type
-      //send value to correct parsing function
-      //return text string
-
-  }
-
-  //functions for parsing values
-  function stringArray() {
-      let arrayResult;
-
-      return middle = middle + arrayResult;
-  }
-
-  function stringObject() {
-      let objectResult;
-
-      return middle = middle + objectResult;
-
-  }
-
-  function stringOther() {
-      let otherResult;
-
-      return middle = middle + otherResult;
-
-  }
-
-
-  //********Main**********
-  //test obj if not a dictionary return obj as is.
-  if (!isDict(obj)) {
-      return obj;
-  }
-
-
-
-  return `${leftside}${middle}${rightside}`;
-};
-
-
-
-
-// Test Data
-let simpleTestData = {
-  'a' : 123,
-  'b' : 'Tammy',
-  'c' : [1, 2, 3],
-  'd' : {'z' : 123, 'y': 'abc'}
-};
-
-let otherTestData = {'a' : 1};
-
-//{"a":123,"b":"Tammy","c":[1,2,3],"d":{"z":123,"y":"abc"}}
-
-// Simple Test
-let theirs = JSON.stringify(simpleTestData);
-console.log('theirs:', theirs);
-console.log ('-----------------------')
-let mine = stringifyJSON(simpleTestData);
-console.log ('mine: ', mine);
-
-if (theirs === mine) {
-  console.log('PASSED!');
-} else {
-  console.log('FAILED');
 }
 
-let otherTest = JSON.stringify(otherTestData);
-console.log('their otherTest:', otherTest);
-let myOtherTest = stringifyJSON(otherTestData);
-console.log(myOtherTest);
+function simpleValueToString(val) {
+  let left = '';
+  let right = '';
 
+  if (typeof val === 'string') {
+    left = '"';
+    right = '"';
+  }
 
+  let result = `${left}${val}${right}`;
+  return result;
+}
+
+function arrayToString(arr) {
+  let left = '[';
+  let right = ']';
+  let result = "";
+
+  arr.forEach(x =>{
+    var stringified = stringifyJSON(x);
+    result += stringified + ",";
+  });
+
+  result = result.slice(0, result.length - 1);
+
+  let finalResult = `${left}${result}${right}`;
+  return finalResult;
+
+}
+
+function objToString(obj) {
+  let resultBegin = "{";
+  let resultEnd = "}";
+  let resultMiddle = "";
+
+  for (let key in obj) {
+    let val = obj[key];
+    let stringified = stringifyJSON(val);
+
+    if (val === undefined || typeof val === "function") {
+      continue;
+    }
+
+    resultMiddle += `"${key}":${stringified},`;
+  }
+
+  // Trim the trailing comma.
+  resultMiddle = resultMiddle.slice(0, resultMiddle.length -1);
+  return resultBegin + resultMiddle + resultEnd;
+}
